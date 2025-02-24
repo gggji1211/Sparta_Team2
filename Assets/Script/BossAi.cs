@@ -12,13 +12,17 @@ public class BossAI : MonoBehaviour
     private bool isEnraged = false;
     public float moveSpeed = 2f;
 
-    public float moveSpeedUp = 1.5f;
+    public float dashSpeed = 10f; // 대쉬 속도
+    public float dashCooldown = 3f; // 대쉬 쿨타임
+    private float lastDashTime;
+
+    public float moveSpeedUp = 1.5f; // 스피드업
 
     public float bossHp = 100f;
 
-    public float detectionRange = 5f;
+    public float detectionRange = 5f; //인식거리
 
-    public float attackRange = 1.5f;
+    public float attackRange = 1.5f; //사거리
 
     private Rigidbody2D boss;
 
@@ -57,8 +61,17 @@ public class BossAI : MonoBehaviour
                 break;
         }
     }
-
-    void ChasePlayer()
+    void DashAttack()
+    {
+        if (Time.time - lastDashTime > dashCooldown)
+        {
+            Vector2 dashDirection = (player.position - transform.position).normalized;
+            boss.velocity = dashDirection * dashSpeed;
+            lastDashTime = Time.time;
+            Debug.Log("보스가 대쉬 공격");
+        }
+    }
+        void ChasePlayer()
     {
         Vector2 direction = (player.position - transform.position).normalized;
 
